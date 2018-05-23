@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    int id_dyn;
+    ArrayList<Integer> id_dyn = new ArrayList<Integer>();
 
     private final int editoractivity = 0;
     private ArrayList<Integer> Day = new ArrayList<Integer>();
@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        addMenuItemInNaviMenuDrawer(contents.get(0).getName(), contents.get(0).getDay(), 0 );
+
+
+            addMenuItemInNaviMenuDrawer(contents);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -119,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.nav_message) {
+        //int i = item.getItemId();
+       /* if (i == R.id.nav_message) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new MessageFragment()).commit();
 
@@ -142,13 +144,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new WebFragment()).commit();
 
-        } else if (i == id_dyn) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
+        } else*/
+            id_dyn.indexOf(item.getItemId());
 
 
+        int check = 0;
 
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                check++;
+            }
         }
+
+        submenu = menu.addSubMenu("둘째 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+        submenu = menu.addSubMenu("셋째 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+        submenu = menu.addSubMenu("마지막 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+
+
+
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new WebFragment(contents.)).commit();
+
+
+
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -162,29 +214,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //           new MainFragment());
         }
     }
-    private void addMenuItemInNaviMenuDrawer(String _name, String Day, int order) {
+    private void addMenuItemInNaviMenuDrawer(ArrayList<Content> contents) {
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
 
         Menu menu = navView.getMenu();
-        Menu submenu = menu.addSubMenu("첫째 날");;
-        if(Day == "첫째 날") {
-            submenu = menu.addSubMenu("첫째 날");
-        }
-        else if(Day == "둘째 날")
-        {
-            submenu = menu.addSubMenu("둘째 날");
-        }
-        else if(Day == "셋째 날")
-        {
-            submenu = menu.addSubMenu("셋째 날");
-        }
-        else if(Day == "마지막 날")
-        {
-            submenu = menu.addSubMenu("마지막 날");
-        }
-        submenu.add(_name);
+        Menu submenu;
 
-        id_dyn = submenu.getItem(order).getItemId();
+
+        int check = 0;
+        submenu = menu.addSubMenu("첫째 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+        submenu = menu.addSubMenu("둘째 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+        submenu = menu.addSubMenu("셋째 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+        submenu = menu.addSubMenu("마지막 날");
+        for(int i = 0;i<contents.size();i++)
+        {
+            if (contents.get(i).getIntDay() == 0){
+
+                submenu.add(contents.get(i).getName());
+                id_dyn.add(submenu.getItem(check).getItemId());
+                check++;
+            }
+        }
+
+
+
 
         navView.invalidate();
 

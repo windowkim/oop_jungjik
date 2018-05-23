@@ -145,15 +145,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new WebFragment()).commit();
 
         } else*/
-            id_dyn.indexOf(item.getItemId());
+            
 
 
         int check = 0;
 
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
-
+            if (contents.get(i).getIntDay() == 0){//첫째날일때
+                if(id_dyn.indexOf(item.getItemId()) == check)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new WebFragment()).commit();
+                
                 check++;
             }
         }
@@ -162,9 +165,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){
-
-                submenu.add(contents.get(i).getName());
-                id_dyn.add(submenu.getItem(check).getItemId());
+             if(id_dyn.indexOf(item.getItemId()) == check)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new WebFragment()).commit();
+                
                 check++;
             }
         }
@@ -174,8 +178,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
-                id_dyn.add(submenu.getItem(check).getItemId());
+                 if(id_dyn.indexOf(item.getItemId()) == check)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new WebFragment()).commit();
+                
                 check++;
             }
         }
@@ -185,20 +191,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
-                id_dyn.add(submenu.getItem(check).getItemId());
+                 if(id_dyn.indexOf(item.getItemId()) == check)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new WebFragment()).commit();
+                
                 check++;
             }
         }
-
-
-
-
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment(contents.)).commit();
-
-
 
 
         drawer.closeDrawer(GravityCompat.START);

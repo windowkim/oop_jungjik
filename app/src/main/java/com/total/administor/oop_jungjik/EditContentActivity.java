@@ -1,0 +1,55 @@
+package com.total.administor.oop_jungjik;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+
+public class EditContentActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_content);
+
+        Button editorbutton = (Button) findViewById(R.id.editorbutton);
+        int i=0;
+        final Content content = (Content) getIntent().getSerializableExtra("Content");
+        TextView daytext = (TextView) findViewById(R.id.dayview);
+        TextView timetext = (TextView) findViewById(R.id.timeview);
+        final Spinner dayspinner = (Spinner) findViewById(R.id.dayspinner);
+        final Spinner minutespinner = (Spinner) findViewById(R.id.minutespinner);
+        final Spinner secondspinner = (Spinner) findViewById(R.id.secondspinner);
+        ArrayAdapter adapter1 = ArrayAdapter.createFromResource(this,R.array.Day, android.R.layout.simple_spinner_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dayspinner.setAdapter(adapter1);
+        dayspinner.setSelection(content.getIntDay());
+        ArrayAdapter adapter2 = ArrayAdapter.createFromResource(this,R.array.Minute, android.R.layout.simple_spinner_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        minutespinner.setAdapter(adapter2);
+        minutespinner.setSelection(content.getMinute());
+        ArrayAdapter adapter3 = ArrayAdapter.createFromResource(this,R.array.Second, android.R.layout.simple_spinner_item);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        secondspinner.setAdapter(adapter3);
+        secondspinner.setSelection(content.getSeond()/5);
+
+        editorbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                content.setDay((String) dayspinner.getSelectedItem(),dayspinner.getSelectedItemPosition());
+                content.setMinute(Integer.parseInt((String) minutespinner.getSelectedItem()));
+                content.setSecond(Integer.parseInt((String) secondspinner.getSelectedItem()));
+                Intent intent = new Intent();
+                intent.putExtra("Content", content);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+    }
+}

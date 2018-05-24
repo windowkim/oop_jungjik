@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }*/
-
-
+        
+        //navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
+                submenu.add(contents.get(i).getName()).setIcon(R.drawable.ic_chat);//example, need to add
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }

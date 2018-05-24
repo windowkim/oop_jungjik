@@ -156,48 +156,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(id_dyn.indexOf(item.getItemId()) == check)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new WebFragment()).commit();
+
                 
                 check++;
             }
         }
 
-        submenu = menu.addSubMenu("둘째 날");
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
-             if(id_dyn.indexOf(item.getItemId()) == check)
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
-                
+            if (contents.get(i).getIntDay() == 1){//둘째날일때
+                if(id_dyn.indexOf(item.getItemId()) == check)
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new WebFragment()).commit();
+
+
                 check++;
             }
         }
 
-        submenu = menu.addSubMenu("셋째 날");
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
+            if (contents.get(i).getIntDay() == 2){//셋째날일때
+                if(id_dyn.indexOf(item.getItemId()) == check)
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new WebFragment()).commit();
 
-                 if(id_dyn.indexOf(item.getItemId()) == check)
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
-                
+
                 check++;
             }
         }
 
-        submenu = menu.addSubMenu("마지막 날");
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
+            if (contents.get(i).getIntDay() == 3){//마지막날일때
+                if(id_dyn.indexOf(item.getItemId()) == check)
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new WebFragment()).commit();
 
-                 if(id_dyn.indexOf(item.getItemId()) == check)
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
-                
+
                 check++;
             }
         }
+
+
 
 
         drawer.closeDrawer(GravityCompat.START);
@@ -226,18 +227,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName()).setIcon(R.drawable.ic_chat);//example, need to add
+                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
         }
+
 
         submenu = menu.addSubMenu("둘째 날");
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
+                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_secondday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
+                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_thirdday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName());
+                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_fourthday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }

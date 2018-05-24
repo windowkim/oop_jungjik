@@ -18,6 +18,9 @@ public class WebFragment extends Fragment {
     private WebSettings webSettings;
     private String html = "http://freshman.postech.ac.kr/";
     private int Day = 0;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -13,13 +13,31 @@ import android.webkit.WebViewClient;
 
 
 public class WebFragment extends Fragment {
+    private static final String Html = "html";
+
 
     private WebView webView;
     private WebSettings webSettings;
-    private String html = "http://freshman.postech.ac.kr/";
+    private  String html = "http://freshman.postech.ac.kr/";
     private int Day = 0;
 
+    public static WebFragment newInstance(String adress)
+    {
+        WebFragment fragment = new WebFragment();
+        Bundle args = new Bundle();
+        args.putString(Html, adress);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+        {
+            html = getArguments().getString(Html);
+        }
+    }
 
     @Nullable
     @Override

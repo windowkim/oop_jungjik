@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +22,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     ArrayList<Integer> id_dyn = new ArrayList<Integer>();
+    ArrayList<Integer> id_dyn_sub = new ArrayList<Integer>();
 
     private final int editoractivity = 0;
-    private ArrayList<Integer> Day = new ArrayList<Integer>();
     private User user = new User(1, "1");
     private int SelectedDay = 0;
     private ArrayList<Content> contents = new ArrayList<Content>();
@@ -33,55 +34,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        String name[] = {"Google", "Naver", "Freshman"};
+        String s[] = {"https://www.google.com/",
+                "https://www.naver.com/", "http://freshman.postech.ac.kr/"};
 
-        String s[] = {"A", "B", "C"};
         for (int i = 0; i < 3; i++) {
-            contents.add(new Content(s[i]," ", 0,0));
+            contents.add(new Content(name[i],s[i],"첫째날", 0,0));
         }
-        for (int i = 1; i < 5; i++) {
-            Day.add(i);
-        }
-      /*  Button editorbutton = (Button) findViewById(R.id.editorbutton);
-        Button checkbutton = (Button) findViewById(R.id.checkbutton);
-        ArrayList<Button> Daybutton = new ArrayList<Button>();
-        Daybutton.add((Button) findViewById(R.id.day1button));
-        Daybutton.add((Button) findViewById(R.id.day2button));
-        Daybutton.add((Button) findViewById(R.id.day3button));
-        Daybutton.add((Button) findViewById(R.id.day4button));
-        editorbutton.setText("컨텐츠 편집");
-        checkbutton.setText("컨텐츠 시청 확인");
-      */  User puser = (User) getIntent().getSerializableExtra("User");
+
+        User puser = (User) getIntent().getSerializableExtra("User");
         user = puser;
         String username = user.getName();
         Toast toast = Toast.makeText(getApplicationContext(), "환영합니다! " + username + "님~", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, -500);
         toast.show();
-      /*  if (!user.isEditor()) // 새내기
-        {
-            editorbutton.setVisibility(View.GONE);
-            checkbutton.setVisibility(View.GONE);
-        }
 
-        editorbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                intent.putExtra("Contents", contents);
-                MainActivity.this.startActivityForResult(intent, editoractivity);
-            }
-        });
-        for (int i = 0; i < 4; i++) {
-            final int index = i;
-            Daybutton.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ContentsArrayActivity.class);
-                    intent.putExtra("Contents", contents);
-                    intent.putExtra("Day", index);
-                    MainActivity.this.startActivity(intent);
-                }
-            });
-        }*/
         
         //navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -96,66 +63,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
+        Log.v("MainActivity", "memunum"+Integer.toString(navigationView.getMenu().size()));
 
             addMenuItemInNaviMenuDrawer(contents);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
+                    MessageFragment.newInstance(user,contents)).commit();
             // navigationView.setCheckedItem(R.id.nav_message);
 
         }
     }
 
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK)
+        if (resultCode != 1)
             return;
-        if (requestCode == editoractivity) {
+        if (requestCode == 1) {
             contents = (ArrayList<Content>) data.getSerializableExtra("Contents");
+            Log.v("MainActivity", "EditorActivity result : ");
+            NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+            Log.v("MainActivity", Integer.toString(navView.getMenu().size()));
+            for(int i=0;i<id_dyn.size();i++)
+                navView.getMenu().removeItem(id_dyn.get(i));
+            for(int i=0;i<id_dyn_sub.size();i++)
+                navView.getMenu().removeItem(id_dyn_sub.get(i));
+            Log.v("MainActivity", Integer.toString(id_dyn.size()));
+            id_dyn.clear();
+            id_dyn_sub.clear();
+            Log.v("MainActivity", contents.get(0).getDay());
+            Log.v("MainActivity", Integer.toString(id_dyn.size()));
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    MessageFragment.newInstance(user,contents)).commit();
+            addMenuItemInNaviMenuDrawer(contents);
         }
 
-    }*/
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        //int i = item.getItemId();
-       /* if (i == R.id.nav_message) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new MessageFragment()).commit();
-
-        } else if (i == R.id.nav_chat) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ChatFragment()).commit();
-
-        } else if (i == R.id.nav_profile) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
-
-        } else if (i == R.id.nav_send) {
-            Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
-
-        } else if (i == R.id.nav_share) {
-            Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-
-        } else if (i == R.id.simpleWebView) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
-
-        } else*/
-            
-
-
         int check = 0;
+
+        if(item.getItemId() == R.id.nav_time)
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    MessageFragment.newInstance(user,contents)).commit();
 
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){//첫째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new WebFragment()).commit();
+                    WebFragment.newInstance(contents.get(check).getHtml())).commit();
 
                 
                 check++;
@@ -167,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 1){//둘째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new WebFragment()).commit();
+                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
 
 
                 check++;
@@ -179,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 2){//셋째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new WebFragment()).commit();
+                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
 
 
                 check++;
@@ -191,15 +150,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 3){//마지막날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new WebFragment()).commit();
+                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
 
 
                 check++;
             }
         }
-
-
-
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -222,7 +178,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         int check = 0;
+        int dump;
         submenu = menu.addSubMenu("첫째 날");
+
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){
@@ -232,40 +190,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 check++;
             }
         }
+        if(check>0)
+            id_dyn_sub.add(menu.getItem(1).getItemId());
 
-
+        check = 0;
         submenu = menu.addSubMenu("둘째 날");
+
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
+            if (contents.get(i).getIntDay() == 1){
 
                 submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_secondday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
-        }
+        }Log.v("SecondDay",Integer.toString(check));
+        dump = check;
+        if(check>0)
+            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
 
+
+        check = 0;
         submenu = menu.addSubMenu("셋째 날");
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
+            if (contents.get(i).getIntDay() == 2){
 
                 submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_thirdday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
-        }
+        }Log.v("ThirdDay",Integer.toString(check));
+        dump = check;
+        if(check>0)
+            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
 
+
+
+
+        check = 0;
         submenu = menu.addSubMenu("마지막 날");
         for(int i = 0;i<contents.size();i++)
         {
-            if (contents.get(i).getIntDay() == 0){
+            if (contents.get(i).getIntDay() == 3){
 
                 submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_fourthday);
                 id_dyn.add(submenu.getItem(check).getItemId());
                 check++;
             }
-        }
+        }Log.v("lastDay",Integer.toString(check));
+        dump = check;
+        if(check>0)
+            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
 
 
 

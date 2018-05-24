@@ -17,12 +17,15 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         final EditText idtext = (EditText) findViewById(R.id.idtext);
         final EditText passwordtext = (EditText) findViewById(R.id.passwordtext);
@@ -54,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                                             User user = (User) getIntent().getSerializableExtra("User");
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             intent.putExtra("User", user);
+
                                             LoginActivity.this.startActivity(intent);
                                             finish();
                                         }

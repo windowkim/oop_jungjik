@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class EditorActivity extends AppCompatActivity {
 
     private ArrayList<Content> contents = new ArrayList<Content>();
+
     private final int editorcontentactivity = 1;
     private int Index=0;
     @Override
@@ -27,15 +28,18 @@ public class EditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editor);
 
         contents = (ArrayList<Content>) getIntent().getSerializableExtra("Contents");
+
+        Log.v("EditorActivity", "get ok");
         final TextView text = (TextView) findViewById(R.id.text);
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent();
+                Intent intent = new Intent(EditorActivity.this, MainActivity.class);
                 intent.putExtra("Contents",contents);
-                setResult(RESULT_OK, intent);
+
+                setResult(1,intent);
                 finish();
             }
         });

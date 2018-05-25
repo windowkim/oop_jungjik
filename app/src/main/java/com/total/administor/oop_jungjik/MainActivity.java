@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 0){//첫째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    WebFragment.newInstance(contents.get(check).getHtml())).commit();
+                    WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
                 
                 check++;
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 1){//둘째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
+                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
 
                 check++;
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 2){//셋째날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
+                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
 
                 check++;
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 3){//마지막날일때
                 if(id_dyn.indexOf(item.getItemId()) == check)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(check).getHtml())).commit();
+                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
 
                 check++;

@@ -1,12 +1,16 @@
 package com.total.administor.oop_jungjik;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,10 +20,14 @@ public class WebFragment extends Fragment {
     private static final String Html = "html";
 
 
+
     private WebView webView;
     private WebSettings webSettings;
     private  String html = "http://freshman.postech.ac.kr/";
     private int Day = 0;
+
+
+
 
     public static WebFragment newInstance(String adress)
     {
@@ -63,4 +71,6 @@ public class WebFragment extends Fragment {
 
         return view;
     }
+
+
 }

@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int SelectedDay = 0;
     private ArrayList<Content> contents = new ArrayList<Content>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String name[] = {"Google", "Naver", "Freshman"};
+        String name[] = {"Google", "Naver", "교가"};
         String s[] = {"https://www.google.com/",
-                "https://www.naver.com/", "http://freshman.postech.ac.kr/"};
+                "https://www.naver.com/", "file:///android_asset/school_song.html"};
 
         for (int i = 0; i < 3; i++) {
             contents.add(new Content(name[i],s[i],"첫째날", 0,0));
@@ -172,14 +173,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {//fragment close
             drawer.closeDrawer(GravityCompat.START);
 
         } else {//make first fragment
             super.onBackPressed();
-            //   getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-            //           new MainFragment());
         }
     }
     private void addMenuItemInNaviMenuDrawer(ArrayList<Content> contents) {

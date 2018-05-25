@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for(int i=0;i<id_dyn.size();i++)
                 navView.getMenu().removeItem(id_dyn.get(i));
             for(int i=0;i<id_dyn_sub.size();i++)
+
+                navView.getMenu().removeGroup(id_dyn_sub.get(i));
+            for(int i=0;i<id_dyn_sub.size();i++)
                 navView.getMenu().removeItem(id_dyn_sub.get(i));
             Log.v("MainActivity", Integer.toString(id_dyn.size()));
             id_dyn.clear();
@@ -105,17 +108,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int check = 0;
 
+        Log.v("content htmls", contents.get(0).getHtml());
+        Log.v("content htmls", contents.get(1).getHtml());
+        Log.v("content htmls", contents.get(2).getHtml());
         if(item.getItemId() == R.id.nav_time)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     MessageFragment.newInstance(user,contents)).commit();
 
+
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){//첫째날일때
-                if(id_dyn.indexOf(item.getItemId()) == check)
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    WebFragment.newInstance(contents.get(i).getHtml())).commit();
-
+                Log.v("contentID", Integer.toString(id_dyn.size()));
+                Log.v("itemID", Integer.toString(item.getItemId()));
+                if(contents.get(i).getItemId() == item.getItemId()) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
+                    Log.v("content", Integer.toString(contents.get(i).getItemId()));
+                    Log.v("contenthtml",contents.get(i).getHtml());
+                }
                 
                 check++;
             }
@@ -124,9 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 1){//둘째날일때
-                if(id_dyn.indexOf(item.getItemId()) == check)
+                if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             WebFragment.newInstance(contents.get(i).getHtml())).commit();
+
 
 
                 check++;
@@ -136,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 2){//셋째날일때
-                if(id_dyn.indexOf(item.getItemId()) == check)
+                if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
@@ -148,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 3){//마지막날일때
-                if(id_dyn.indexOf(item.getItemId()) == check)
+                if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             WebFragment.newInstance(contents.get(i).getHtml())).commit();
 
@@ -176,72 +188,82 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Menu menu = navView.getMenu();
         Menu submenu;
 
-
+        int id = 50;
+        int _id = 200;
         int check = 0;
-        int dump;
-        submenu = menu.addSubMenu("첫째 날");
 
-        for(int i = 0;i<contents.size();i++)
+        submenu = menu.addSubMenu(_id, _id, 0,"첫째 날");
+
+
+            for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){
 
-                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
-                id_dyn.add(submenu.getItem(check).getItemId());
+                submenu.add(0,id,submenu.FIRST,contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
+                contents.get(i).setItemId(id);
+                id_dyn.add(id);
+                Log.v("itemId", Integer.toString(submenu.size()));
                 check++;
+                id++;
             }
         }
+
         if(check>0)
-            id_dyn_sub.add(menu.getItem(1).getItemId());
+            id_dyn_sub.add(_id);
 
         check = 0;
-        submenu = menu.addSubMenu("둘째 날");
+        submenu = menu.addSubMenu(_id, _id, 0,"둘째 날");
 
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 1){
 
-                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_secondday);
-                id_dyn.add(submenu.getItem(check).getItemId());
+                submenu.add(0,id,submenu.FIRST,contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
+                contents.get(i).setItemId(id);
+                id_dyn.add(id);
                 check++;
+                id++;
             }
         }Log.v("SecondDay",Integer.toString(check));
-        dump = check;
+
         if(check>0)
-            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
+            id_dyn_sub.add(_id);
 
 
         check = 0;
-        submenu = menu.addSubMenu("셋째 날");
+        submenu = menu.addSubMenu(_id, _id, 0,"셋째 날");
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 2){
 
-                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_thirdday);
-                id_dyn.add(submenu.getItem(check).getItemId());
+                submenu.add(0,id,submenu.FIRST,contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
+                contents.get(i).setItemId(id);
+                id_dyn.add(id);
                 check++;
+                id++;
             }
         }Log.v("ThirdDay",Integer.toString(check));
-        dump = check;
+
         if(check>0)
-            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
+            id_dyn_sub.add(_id);
 
 
 
 
         check = 0;
-        submenu = menu.addSubMenu("마지막 날");
+        submenu = menu.addSubMenu(_id, _id, 0,"마지막 날");
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 3){
 
-                submenu.add(contents.get(i).getName()).setIcon(R.mipmap.ic_fourthday);
-                id_dyn.add(submenu.getItem(check).getItemId());
+                submenu.add(0,id,submenu.FIRST,contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
+                contents.get(i).setItemId(id);
+                id_dyn.add(id);
                 check++;
             }
         }Log.v("lastDay",Integer.toString(check));
-        dump = check;
         if(check>0)
-            id_dyn_sub.add(menu.getItem(1+dump).getItemId());
+            id_dyn_sub.add(_id);
 
 
 

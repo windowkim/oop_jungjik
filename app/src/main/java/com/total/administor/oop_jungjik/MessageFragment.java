@@ -50,27 +50,6 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_message,container,false);
-        webView = (WebView) view.findViewById(R.id.WebView);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-
-        webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/school_song.html");
-
-
-
-
-
-
-        //View view = inflater.inflate(R.layout.fragment_message,container,false);
 
         Button editorbutton = (Button) view.findViewById(R.id.editorbutton);
         Button checkbutton = (Button) view.findViewById(R.id.checkbutton);
@@ -90,13 +69,23 @@ public class MessageFragment extends Fragment {
                 intent.putExtra("Contents", contents);
                 intent.putExtra("User", user);
                getActivity().startActivityForResult(intent,1);
-
-
-
-
-
             }
         });
+
+
+        checkbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WatchCheck.class);
+                intent.putExtra("Contents", contents);
+
+                getActivity().startActivityForResult(intent,1);
+            }
+        });
+
+
+
+
      /*
         for (int i = 0; i < 4; i++) {
             final int index = i;

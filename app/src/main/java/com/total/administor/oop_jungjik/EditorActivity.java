@@ -63,15 +63,15 @@ public class EditorActivity extends AppCompatActivity {
             final int index = i;
             categoryButton.setTag(i);
             categoryButton.setText(contents.get(i).getName());
-            categoryLinearLayout.addView(categoryButton);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMarginEnd(100);
-            categoryButton.setLayoutParams(params);
             categoryButton.setGravity(Gravity.CENTER);
             categoryButton.setTypeface(typeface);
 
+            categoryButton.setHeight(50);
             categoryButton.setTextSize(20);
-            categoryButton.setBackgroundColor(Color.parseColor("#FFFF4081"));
+            categoryButton.setBackgroundResource(R.mipmap.ic_ponix);
+            categoryLinearLayout.addView(categoryButton);
+
+            //categoryButton.setBackgroundColor(Color.parseColor("#FFFF4081"));
             categoryButton.setOnClickListener(new View.OnClickListener()
             {
                 @Override

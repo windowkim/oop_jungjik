@@ -15,21 +15,24 @@ public class Content implements Serializable {
 
 
 
-    public Content(String name, String _html, String day,int sec,int min )
+    public Content(String name, String day,int min,int sec )
     {
         Name = name;
         Day=day;
         second=sec;
         minute=min;
-        html = _html;
 
-        if(day=="둘째 날")
+
+        if(day.equals("둘째 날"))
         {daynum=1;}
-        else if(day=="셋째 날")
+        else if(day.equals("셋째 날"))
         {daynum=2;}
-        else if(day=="마지막 날")
+        else if(day.equals("마지막 날"))
         {daynum=3;}
         else {daynum=0;}
+    }
+
+    public Content() {
     }
 
     public int getMinute() {

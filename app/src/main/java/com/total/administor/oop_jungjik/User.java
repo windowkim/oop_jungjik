@@ -1,12 +1,16 @@
 package com.total.administor.oop_jungjik;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 public class User implements Serializable{
     private int ID;
+
+
     private  String Name;
     private boolean isEditor;
+
+
+
 
     public boolean isEditor() {
         return isEditor;
@@ -20,19 +24,15 @@ public class User implements Serializable{
         return Name;
     }
 
-    public User(int userid, String username)
+    public User(int userid, String username, String edit)
     {
         ID=userid;
         Name=username;
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        if (userid / 10000 == year) // 새내기
-        {
-            isEditor=false;
+        if(edit.equals("User")) {
+            isEditor = false;
         }
         else
-        {
-            isEditor=true;
-        }
+        {isEditor=true;}
     }
-}
+
+    }

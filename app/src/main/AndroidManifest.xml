@@ -12,22 +12,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustPan">
-        <activity android:name=".LoginActivity">
+
+        <activity android:name=".IntroActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".LoginActivity"/>
+
+
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".EditorActivity" />
         <activity android:name=".EditContentActivity" />
-        <activity android:name=".ContentsArrayActivity" />
-        <activity android:name=".ContentActivity" />
-        <activity android:name=".WatchCheck"></activity>
+        
+        <activity android:name=".WatchCheck" />
+
     </application>
 
 </manifest>

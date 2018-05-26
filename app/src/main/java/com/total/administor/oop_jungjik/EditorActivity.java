@@ -1,29 +1,23 @@
 package com.total.administor.oop_jungjik;
 
 
-
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.renderscript.ScriptIntrinsicColorMatrix;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import java.util.ArrayList;
 
 public class EditorActivity extends AppCompatActivity {
 
     private ArrayList<Content> contents = new ArrayList<Content>();
+    private User user;
 
     private final int editorcontentactivity = 1;
     private int Index=0;
@@ -32,14 +26,12 @@ public class EditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        contents = (ArrayList<Content>) getIntent().getSerializableExtra("Contents");
-
-        Log.v("EditorActivity", "get ok");
         final TextView text = (TextView) findViewById(R.id.text);
         Typeface typeface = Typeface.createFromAsset(getAssets(),"fonts/BMJUA_ttf.ttf");
         text.setTypeface(typeface);
 
-
+        TextView temp = (TextView) findViewById(R.id.text);
+        temp.setTypeface(typeface);
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,27 +40,27 @@ public class EditorActivity extends AppCompatActivity {
                 Intent intent = new Intent(EditorActivity.this, MainActivity.class);
                 intent.putExtra("Contents",contents);
 
-                setResult(1,intent);
+                setResult(RESULT_OK,intent);
                 finish();
             }
         });
 
         ScrollView mScrollView = (ScrollView) findViewById(R.id.scrollview);
         LinearLayout categoryLinearLayout = (LinearLayout)findViewById(R.id.linearlayout);
+        contents = (ArrayList<Content>) getIntent().getSerializableExtra("Contents");
+        user = (User) getIntent().getSerializableExtra("User");
+
 
         for (int i = 0; i < contents.size(); i++){
             final Button categoryButton = new Button (this);
-
-
             final int index = i;
             categoryButton.setTag(i);
             categoryButton.setText(contents.get(i).getName());
             categoryButton.setGravity(Gravity.CENTER);
+            categoryButton.setPadding(0,0,20,9);
             categoryButton.setTypeface(typeface);
-
-            categoryButton.setHeight(50);
             categoryButton.setTextSize(20);
-            categoryButton.setBackgroundResource(R.mipmap.ic_ponix);
+            categoryButton.setBackgroundResource(R.drawable.long_button);
             categoryLinearLayout.addView(categoryButton);
 
             //categoryButton.setBackgroundColor(Color.parseColor("#FFFF4081"));
@@ -79,9 +71,9 @@ public class EditorActivity extends AppCompatActivity {
                 {
                     Intent intent = new Intent(EditorActivity.this,EditContentActivity.class);
                     intent.putExtra("Content",contents.get(index));
+                    intent.putExtra("User",user);
                     Index = index;
                     EditorActivity.this.startActivityForResult(intent,editorcontentactivity);
-                    Log.e("Tag",""+index);
                 }
             });
         }
@@ -98,7 +90,6 @@ public class EditorActivity extends AppCompatActivity {
             contents.get(Index).setDay(pcontent.getDay(),pcontent.getIntDay());
             contents.get(Index).setMinute(pcontent.getMinute());
             contents.get(Index).setSecond(pcontent.getSeond());
-            Toast.makeText(getApplicationContext(),pcontent.getDay(),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,7 +98,7 @@ public class EditorActivity extends AppCompatActivity {
         Intent intent = new Intent(EditorActivity.this, MainActivity.class);
         intent.putExtra("Contents",contents);
 
-        setResult(1,intent);
+        setResult(RESULT_OK,intent);
         finish();
         super.onBackPressed();
     }

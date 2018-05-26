@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MessageFragment extends Fragment {
     private WebView webView;
     private WebSettings webSettings;
-    User user = new User(1,"1");
+    User user = new User(1,"1", " ");
     ArrayList<Content> contents = new ArrayList<Content>();
 
     public static MessageFragment newInstance(User _user, ArrayList<Content> _contents)
@@ -56,11 +56,29 @@ public class MessageFragment extends Fragment {
         editorbutton.setText("컨텐츠 편집");
         checkbutton.setText("컨텐츠 시청 확인");
 
+        webView = (WebView) view.findViewById(R.id.WebView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setSupportZoom(true);
+        webView.loadUrl("http://psiki.iptime.org:57210/Contents0.html");
+        Log.v("isEditor?", Boolean.toString(user.isEditor()));
+
 
      if (!user.isEditor()) // 새내기
         {
             editorbutton.setVisibility(View.GONE);
-            checkbutton.setVisibility(View.GONE);
+
         }
         editorbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +96,7 @@ public class MessageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WatchCheck.class);
                 intent.putExtra("Contents", contents);
+                intent.putExtra("User",user);
 
                 getActivity().startActivityForResult(intent,1);
             }
@@ -86,31 +105,7 @@ public class MessageFragment extends Fragment {
 
 
 
-     /*
-        for (int i = 0; i < 4; i++) {
-            final int index = i;
-            Daybutton.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ContentsArrayActivity.class);
-                    intent.putExtra("Contents", contents);
-                    intent.putExtra("Day", index);
-                    getActivity().startActivity(intent);
-                }
-            });
-        }
-        */
 
-    /*protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != RESULT_OK)
-            return;
-        if (requestCode == editoractivity) {
-            contents = (ArrayList<Content>) data.getSerializableExtra("Contents");
-        }
-
-    }*/
 
 
         return view;

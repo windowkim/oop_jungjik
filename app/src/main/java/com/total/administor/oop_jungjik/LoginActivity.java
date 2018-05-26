@@ -14,10 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         final EditText idtext = (EditText) findViewById(R.id.idtext);
         final EditText passwordtext = (EditText) findViewById(R.id.passwordtext);
@@ -41,55 +37,33 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String userid = idtext.getText().toString();
                 final String userpassword = passwordtext.getText().toString();
-                if(isNumber(userid)) { // 지울것
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage("로그인에 성공하였습니다.")
-                            .setPositiveButton("확인",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            User user = (User) getIntent().getSerializableExtra("User");
-                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                            intent.putExtra("User", user);
-
-                                            LoginActivity.this.startActivity(intent);
-                                            finish();
-                                        }
-                                    }
-                            )
-                            .create().show();
-                }
-                else
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage("로그인에 실패하였습니다.")
-                            .setNegativeButton("다시 시도", null)
-                            .create().show();
-                }
-
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                String userid = jsonResponse.getString("userID");
-                                String userpassword = jsonResponse.getString("userPassword");
+                            boolean success = jsonResponse.getBoolean("Success");
+                            if(success && userid.length() == 8 && isNumber(userid)) {
+                                final String name = jsonResponse.getString("Name");
+                                final String Name = new String (name.getBytes("iso-8859-1"), "euc-kr");
+                                final String permission = jsonResponse.getString("Permission");
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("로그인에 성공하였습니다.")
                                         .setPositiveButton("확인",
                                                 new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
+                                                        User user =  new User(Integer.parseInt(userid), Name, permission);
                                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                        intent.putExtra("User", user);
                                                         LoginActivity.this.startActivity(intent);
+                                                        finish();
                                                     }
                                                 }
                                         )
@@ -109,15 +83,12 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-
                 LoginRequest loginRequest = new LoginRequest(userid,userpassword,responseListener);
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(loginRequest);
             }
         });
-
     }
-
 
     public static boolean isNumber(String str) {
         boolean check = true;

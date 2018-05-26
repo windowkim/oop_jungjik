@@ -13,10 +13,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,48 +31,81 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayList<Integer> id_dyn_sub = new ArrayList<Integer>();
 
     private final int editoractivity = 0;
-    private User user = new User(1, "1");
-    private int SelectedDay = 0;
-    private ArrayList<Content> contents = new ArrayList<Content>();
-
+    private User user = new User(1,"1"," ");
+    private int SelectedDay=0, Nfile=0; //
+    private ArrayList<String> Days = new ArrayList<String>(); //
+    private ArrayList<String> Names = new ArrayList<String>(); //
+    private ArrayList<Integer> Minutes = new ArrayList<Integer>(); //
+    private ArrayList<Integer> Seconds = new ArrayList<Integer>(); //
+    private ArrayList<Content> contents = new ArrayList<Content>(); //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String name[] = {"Google", "Naver", "교가"};
-        String s[] = {"https://www.google.com/",
-                "https://www.naver.com/", "file:///android_asset/school_song.html"};
 
-        for (int i = 0; i < 3; i++) {
-            contents.add(new Content(name[i],s[i],"첫째날", 0,0));
-        }
 
-        User puser = (User) getIntent().getSerializableExtra("User");
-        user = puser;
-        String username = user.getName();
-        Toast toast = Toast.makeText(getApplicationContext(), "환영합니다! " + username + "님~", Toast.LENGTH_SHORT);
+        user = (User) getIntent().getSerializableExtra("User");
+        Log.v("isEditor?",Boolean.toString(user.isEditor()));
+        Toast toast = Toast.makeText(getApplicationContext(), "환영합니다! " + user.getName()+ "님~", Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, -500);
         toast.show();
 
-        
-        //navigation drawer
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    Nfile = jsonResponse.getInt("Nfile"); // 파일 갯수
+                    for(int i=0;i<Nfile;i++)
+                    {
+                        try {
+                            // JSONArray Array = jsonResponse.getJSONArray("Contents1");
+                            JSONObject jsonContents = jsonResponse.getJSONObject("Contents"+String.valueOf(i+1));
+                            final String Name = new String  (jsonContents.getString("Name").getBytes("iso-8859-1"), "euc-kr");
+                            final String Day = new String  (jsonContents.getString("Day").getBytes("iso-8859-1"), "euc-kr");
+                            Names.add(new String(Name));
+                            Days.add(new String(Day));
+                            Minutes.add(Integer.parseInt(jsonContents.getString("Minutes")));
+                            Seconds.add(Integer.parseInt(jsonContents.getString("Seconds")));
+                            Content content = new Content(Names.get(i), Days.get(i), Minutes.get(i), Seconds.get(i));
+                            contents.add(content);
+                        }
+                        catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+                //navigation drawer
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
 
-        Log.v("MainActivity", "memunum"+Integer.toString(navigationView.getMenu().size()));
+                drawer = findViewById(R.id.drawer_layout);
+                NavigationView navigationView = findViewById(R.id.nav_view);
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
-            addMenuItemInNaviMenuDrawer(contents);
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawer, toolbar,
+                        R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
+
+                Log.v("MainActivity", "memunum"+Integer.toString(navigationView.getMenu().size()));
+
+                addMenuItemInNaviMenuDrawer(contents);
+
+
+            };
+
+        };
+
+        GetContentsInfoRequest GetRequest = new GetContentsInfoRequest(responseListener);
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        queue.add(GetRequest);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -74,15 +113,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // navigationView.setCheckedItem(R.id.nav_message);
 
         }
+
+
+
     }
+
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != 1)
+        if (resultCode != RESULT_OK)
             return;
         if (requestCode == 1) {
             contents = (ArrayList<Content>) data.getSerializableExtra("Contents");
+
             Log.v("MainActivity", "EditorActivity result : ");
             NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
             Log.v("MainActivity", Integer.toString(navView.getMenu().size()));
@@ -109,9 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int check = 0;
 
-        Log.v("content htmls", contents.get(0).getHtml());
-        Log.v("content htmls", contents.get(1).getHtml());
-        Log.v("content htmls", contents.get(2).getHtml());
+
         if(item.getItemId() == R.id.nav_time)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     MessageFragment.newInstance(user,contents)).commit();
@@ -120,13 +163,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){//첫째날일때
-                Log.v("contentID", Integer.toString(id_dyn.size()));
-                Log.v("itemID", Integer.toString(item.getItemId()));
+
                 if(contents.get(i).getItemId() == item.getItemId()) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
-                    Log.v("content", Integer.toString(contents.get(i).getItemId()));
-                    Log.v("contenthtml",contents.get(i).getHtml());
+                            WebFragment.newInstance(user,contents.get(i),i+1)).commit();
+
                 }
                 
                 check++;
@@ -138,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 1){//둘째날일때
                 if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
+                            WebFragment.newInstance(user,contents.get(i),i+1)).commit();
 
 
 
@@ -151,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 2){//셋째날일때
                 if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
+                            WebFragment.newInstance(user,contents.get(i),i+1)).commit();
 
 
                 check++;
@@ -163,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (contents.get(i).getIntDay() == 3){//마지막날일때
                 if(contents.get(i).getItemId() == item.getItemId())
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            WebFragment.newInstance(contents.get(i).getHtml())).commit();
+                            WebFragment.newInstance(user,contents.get(i),i+1)).commit();
 
 
                 check++;
@@ -194,15 +235,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         submenu = menu.addSubMenu(_id, _id, 0,"첫째 날");
 
-
+        Log.v("getintday", Integer.toString(contents.size()));
             for(int i = 0;i<contents.size();i++)
         {
             if (contents.get(i).getIntDay() == 0){
-
+                Log.v("getintdayif", Integer.toString(contents.get(i).getIntDay()));
                 submenu.add(0,id,submenu.FIRST,contents.get(i).getName()).setIcon(R.mipmap.ic_firstday);//example, need to add
                 contents.get(i).setItemId(id);
                 id_dyn.add(id);
-                Log.v("itemId", Integer.toString(submenu.size()));
                 check++;
                 id++;
             }

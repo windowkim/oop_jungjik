@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +81,8 @@ public class WatchCheck extends AppCompatActivity {
 
                             if (user.isEditor()) //
                             {
+
+
                                 TextView text2 = new TextView(WatchCheck.this);
                                 text2.setTag(i);
                                 text2.setTypeface(typeface);
@@ -90,6 +93,11 @@ public class WatchCheck extends AppCompatActivity {
                                 text2.setLayoutParams(params1);
                                 ll.addView(text2);
                            }
+                           else
+                            {
+                                TextView watchedtime = (TextView) findViewById(R.id.textView2);
+                                watchedtime.setVisibility(View.GONE);
+                            }
 
 
 

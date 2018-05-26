@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".EditorActivity" />
         <activity android:name=".EditContentActivity" />
-        
+
         <activity android:name=".WatchCheck" />
 
     </application>
